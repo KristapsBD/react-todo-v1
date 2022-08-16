@@ -3,15 +3,28 @@ import Todo from './Todo'
 import TodoForm from './TodoForm'
 
 function TodoList() {
-  const [todos, setTodos] = useState([])
+  const [todos, setTodos] = useState([]);
 
   const addTodo = todo => {
     if(!todo.text || /^\s*$/.test(todo.text)){
-        return
+        return;
     }
-    const newTodos = [todo, ...todos]
+    const newTodos = [todo, ...todos];
 
-    setTodos(newTodos)
+    setTodos(newTodos);
+  };
+
+  const removeTodo = id => {
+    const removeArr = [...todos].filter(todo => todo.id !== id);
+
+    setTodos(removeArr);
+  };
+
+  const updateTodo = (todoId, newValue) => {
+    if(!newValue.text || /^\s*$/.test(newValue.text)){
+        return;
+    }
+    setTodos(prev => prev.map(item => (item.id === todoId ? newValue : item)));
   };
 
   const completeTodo = id => {
@@ -21,15 +34,15 @@ function TodoList() {
         }
         return todo;
     });
-    
+
     setTodos(updatedTodos);
-  }
+  };
 
   return (
     <div>
         <h1>Whats the plan for today?</h1>
         <TodoForm onSubmit={addTodo}></TodoForm>
-        <Todo todos={todos} completeTodo={completeTodo}/>
+        <Todo todos={todos} completeTodo={completeTodo} removeTodo={removeTodo} updateTodo={updateTodo}/>
     </div>
   )
 }
